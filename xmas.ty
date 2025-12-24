@@ -1,0 +1,16 @@
+include("./llm.ty")
+glob := ["_out_": ""]
+prompt := fs.readText("prompt")
+runSentence := (sent) => {
+    # println(sent)
+    glob["_out_"] = ""
+    llmInstance := llm()
+    llmInstance.addMessage("user", "{prompt}\n{glob}\nSentence:\n{sent}")
+    res := llmInstance.response(0)
+    # println(res)
+    glob = json.decode(res)
+    if glob["_out_"] != "" println(glob["_out_"])
+}
+cont := fs.readText(argv[1]).split(".").map(item => runSentence(item))
+# println(cont)
+# println(glob)
